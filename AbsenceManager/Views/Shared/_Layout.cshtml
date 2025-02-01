@@ -1,0 +1,139 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] | MindScope IT</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/AbsenceManager.styles.css" asp-append-version="true" />
+    <!-- Add Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        /* Custom Navbar Styling */
+        .navbar {
+            background-color: #003366; /* Navy Blue */
+            border-bottom: 2px solid #00264d; /* Darker Navy Blue for Border */
+            padding: 1px 0; /* Reduced Padding for Navbar */
+        }
+
+
+        .navbar-brand {
+            color: #ffffff !important; /* White Text Color */
+            font-weight: bold !important; /* Make Font Bold */
+            font-size: 1.75rem; /* Increased Font Size for Brand Name */
+            transition: color 0.3s ease;
+        }
+
+        .nav-link {
+            color: #ffffff !important; /* White Text Color */
+            font-weight: bold !important; /* Make Font Bold */
+            font-size: 1rem; /* Standard Font Size for Links */
+            padding: 0.5rem 1rem; /* Adjusted Padding for Links */
+            transition: color 0.3s ease;
+        }
+
+            .nav-link:hover {
+                color: #f0f8ff !important; /* Light Blue on Hover */
+            }
+
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255, 255, 255, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+        }
+
+        /* Login/Register Buttons */
+        .auth-buttons .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 5px; /* Space between text and icon */
+        }
+
+            .auth-buttons .nav-link i {
+                font-size: 1.2rem; /* Icon size */
+            }
+
+        /* Active Link Highlight */
+        .nav-link.active {
+            color: #bbdefb !important; /* Light Blue for Active Link */
+            border-bottom: 2px solid #bbdefb;
+        }
+
+        /* Footer Styling */
+        .footer {
+            background-color: #003366; /* Navy Blue */
+            color: #ffffff;
+            padding: 15px 0; /* Adjusted Padding for Footer */
+        }
+
+            .footer a {
+                color: #bbdefb; /* Light Blue for Links */
+                text-decoration: none;
+                font-weight: bold; /* Make Footer Links Bold */
+                font-size: 0.9rem; /* Slightly Smaller Font Size for Footer */
+            }
+
+                .footer a:hover {
+                    color: #f0f8ff; /* Lighter Blue on Hover */
+                }
+
+        /* Container Styling */
+        .container {
+            max-width: 1200px; /* Adjust Container Width */
+            padding: 20px; /* Add Padding for Better Alignment */
+            margin: 0 auto; /* Center Align */
+        }
+
+        /* Main Content Styling */
+        main {
+            font-weight: bold; /* Make Main Content Font Bold */
+            font-size: 1rem; /* Standard Font Size for Main Content */
+            line-height: 1.6; /* Improved Line Height for Readability */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light">
+            <div class="container">
+                <!-- Navbar Brand -->
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">MindScope IT</a>
+                <!-- Toggler Button -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <!-- Navbar Links -->
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Apply">Apply</a>
+                        </li>
+                    </ul>
+                    <!-- Auth Buttons (Login & Register) -->
+                    <ul class="navbar-nav auth-buttons">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/Account/Login"><i class="fas fa-sign-in-alt"></i> Login</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

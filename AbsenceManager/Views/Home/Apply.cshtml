@@ -1,0 +1,47 @@
+﻿@{
+    ViewData["Title"] = "Apply";
+}
+
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-white">
+        <h5 class="mb-0"><i class="fas fa-plus-circle me-2 text-primary"></i>New Leave Request</h5>
+    </div>
+    <div class="card-body">
+        <form>
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label">Leave Type</label>
+                    <select class="form-select">
+                        <option>Annual Leave</option>
+                        <option>Sick Leave</option>
+                        <option>Parental Leave</option>
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Start Date</label>
+                    <input type="date" class="form-control">
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">End Date</label>
+                    <input type="date" class="form-control">
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label">Reason</label>
+                    <textarea class="form-control" rows="3"></textarea>
+                </div>
+
+                <div class="col-md-12">
+                    <label class="form-label">Document(Image or PDF) <span style="font-size:8px">Optional</span> </label>
+                    <input type="file" class="form-control" accept="image/*,application/pdf">
+                </div>
+
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary">Submit Request</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
