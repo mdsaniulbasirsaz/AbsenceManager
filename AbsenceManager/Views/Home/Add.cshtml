@@ -1,0 +1,85 @@
+﻿@{
+    ViewData["Title"] = "Add Employee";
+}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">Add New Employee</h4>
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <!-- Name Field -->
+                            <div class="mb-3">
+                                <label for="name" class="form-label required">Full Name</label>
+                                <input type="text"
+                                       class="form-control"
+                                       id="name"
+                                       placeholder="Enter full name"
+                                       required>
+                            </div>
+
+                            <!-- Password Field -->
+                            <div class="mb-3">
+                                <label for="password" class="form-label required">Password</label>
+                                <input type="password"
+                                       class="form-control"
+                                       id="password"
+                                       placeholder="Enter password"
+                                       required
+                                       minlength="8">
+                                <div class="form-text">Password must be at least 8 characters</div>
+                            </div>
+
+                            <!-- Department Field -->
+                            <div class="mb-3">
+                                <label for="department" class="form-label required">Department</label>
+                                <select class="form-select" id="department" required>
+                                    <option value="">Select Department</option>
+                                    <option>Human Resources</option>
+                                    <option>Information Technology</option>
+                                    <option>Finance</option>
+                                    <option>Marketing</option>
+                                    <option>Operations</option>
+                                </select>
+                            </div>
+
+                            <!-- Phone Number Field -->
+                            <div class="mb-4">
+                                <label for="phone" class="form-label required">Phone Number</label>
+                                <input type="tel"
+                                       class="form-control"
+                                       id="phone"
+                                       placeholder="Enter phone number"
+                                       required
+                                       pattern="[0-9]{10}">
+                                <div class="form-text">Format: 10-digit number (e.g., 9876543210)</div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary">Add Employee</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<style>
+    .card {
+        margin-top: 2rem;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    }
+
+    .form-label {
+        font-weight: 500;
+    }
+
+    .required:after {
+        content: "*";
+        color: red;
+        margin-left: 3px;
+    }
+</style>
