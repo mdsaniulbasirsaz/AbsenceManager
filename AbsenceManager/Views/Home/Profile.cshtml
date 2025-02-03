@@ -1,4 +1,6 @@
-﻿@{
+﻿@model AbsenceManager.Models.Employee
+
+@{
     ViewData["Title"] = "Employee Profile";
 }
 
@@ -11,9 +13,9 @@
     <div class="row g-4">
         <!-- Basic Details -->
         <div class="col-12 col-md-4 text-center">
-            <h5 class="fw-bold mb-0">John Doe</h5>
-            <p class="text-muted mb-0">Information Technology</p>
-            <p class="fw-semibold mb-0">9876543210</p>
+            <h5 class="fw-bold mb-0">@Model.FullName</h5>
+            <p class="text-muted mb-0">@Model.Department</p>
+            <p class="fw-semibold mb-0">@Model.PhoneNumber</p>
         </div>
 
         <!-- Leave Application and History -->
@@ -75,11 +77,8 @@
     <!-- Action Buttons -->
     <div class="d-flex justify-content-center gap-3 mt-4">
         <button class="btn btn-primary px-4">Edit Profile</button>
-        <button class="btn btn-outline-danger px-4">Logout</button>
-    </div>
-
-    <!-- Footer Section -->
-    <div class="text-center text-muted mt-3">
-        <small>Last updated on: January 1, 2025</small>
+        <form asp-action="Logout" method="post">
+            <button type="submit" class="btn btn-outline-danger px-4">Logout</button>
+        </form>
     </div>
 </div>
