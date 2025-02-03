@@ -44,18 +44,18 @@ namespace AbsenceManager.Controllers
             return View();
         }
 
-        public IActionResult Dashboard()
-        {
-			var employeeId = HttpContext.Session.GetInt32("EmployeeId");
+		public IActionResult Dashboard()
+		{
+			var employeeRole = HttpContext.Session.GetString("EmployeeRole");
 
-			if (!employeeId.HasValue)
+			if (employeeRole != "ADMIN")
 			{
 				return RedirectToAction("Login", "Home");
 			}
 			return View();
 		}
 
-        public IActionResult Add()
+		public IActionResult Add()
         {
             return View();
         }
