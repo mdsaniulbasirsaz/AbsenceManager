@@ -21,11 +21,11 @@ namespace AbsenceManager.Models
 		[Required]
 		public string Reason { get; set; }
 
-		public string DocumentPath { get; set; }
+		public string? DocumentPath { get; set; }
 
 		public bool IsApproved { get; set; }
 
 		// Navigation property to Employee
-		public Employee Employee { get; set; }
+		public Employee? Employee { get; set; }
 	}
 }

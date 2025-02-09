@@ -44,6 +44,78 @@ namespace AbsenceManager.Controllers
             return View();
         }
 
+		[HttpPost]
+		public IActionResult Apply(LeaveRequest leaveRequest, IFormFile? file)
+		{
+			var employeeId = HttpContext.Session.GetInt32("EmployeeId");
+
+			if (!employeeId.HasValue)
+			{
+				return RedirectToAction("Index", "Home");
+			}
+
+			leaveRequest.EmployeeId = employeeId.Value;
+			leaveRequest.IsApproved = false;
+
+			// Convert StartDate and EndDate to UTC before saving
+			leaveRequest.StartDate = leaveRequest.StartDate.ToUniversalTime();
+			leaveRequest.EndDate = leaveRequest.EndDate.ToUniversalTime();
+
+			// Handle file upload (Convert to Base64)
+			if (file != null && file.Length > 0)
+			{
+				using (var ms = new MemoryStream())
+				{
+					file.CopyTo(ms);
+					byte[] fileBytes = ms.ToArray();
+					leaveRequest.DocumentPath = Convert.ToBase64String(fileBytes);
+				}
+			}
+			else
+			{
+				leaveRequest.DocumentPath = null; // No file uploaded
+			}
+
+			if (ModelState.IsValid)
+			{
+				_applicationDbContext.LeaveRequests.Add(leaveRequest);
+				_applicationDbContext.SaveChanges();
+				return RedirectToAction("Profile");
+			}
+
+			// Log errors for debugging
+			var errors = ModelState.Values.SelectMany(v => v.Errors);
+			foreach (var error in errors)
+			{
+				Console.WriteLine(error.ErrorMessage); // Debugging purpose
+			}
+
+			return View(leaveRequest);
+		}
+
+
+
+		[HttpGet]
+		public IActionResult GetDocument(int id)
+		{
+			var leaveRequest = _applicationDbContext.LeaveRequests.Find(id);
+			if (leaveRequest == null || string.IsNullOrEmpty(leaveRequest.DocumentPath))
+			{
+				return NotFound("Document not found");
+			}
+
+			byte[] fileBytes = Convert.FromBase64String(leaveRequest.DocumentPath);
+			string fileType = "application/octet-stream"; // Default
+
+			
+			if (leaveRequest.DocumentPath.StartsWith("/9j/")) fileType = "image/jpeg";
+			else if (leaveRequest.DocumentPath.StartsWith("iVBOR")) fileType = "image/png";
+			else if (leaveRequest.DocumentPath.StartsWith("JVBER")) fileType = "application/pdf";
+
+			return File(fileBytes, fileType);
+		}
+
+
 		public IActionResult Dashboard()
 		{
 			var employeeRole = HttpContext.Session.GetString("EmployeeRole");
