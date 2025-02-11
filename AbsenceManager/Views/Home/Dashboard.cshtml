@@ -1,4 +1,5 @@
-﻿@{
+﻿@model List<AbsenceManager.Models.LeaveRequest>
+@{
     ViewData["Title"] = "Admin Dashboard";
 }
 
@@ -55,13 +56,7 @@
             <button class="btn btn-primary mx-2">
                 <i class="fas fa-user-plus me-1"></i> Add Employee
             </button>
-            <button class="btn btn-success mx-2">
-                <i class="fas fa-calendar-plus me-1"></i> Approve Leave
-            </button>
-            <button class="btn btn-warning mx-2">
-                <i class="fas fa-chart-line me-1"></i> View Reports
-            </button>
-            <a asp-controller="Home" asp-action="Profile" class="btn btn-primary mx-2">
+            <a asp-controller="Home" asp-action="Profile" class="btn btn-warning mx-2">
                 <i class="fas fa-user me-1"></i> View Profile
             </a>
         </div>
@@ -74,36 +69,68 @@
             <div class="card-body p-0">
                 <table class="table table-striped mb-0">
                     <thead class="table-light">
-                        <tr>
-                            <th>#</th>
-                            <th>Employee Name</th>
+                        <tr class="text-center">
                             <th>Leave Type</th>
+                            <th>Employee Name</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Reason</th>
                             <th>Status</th>
-                            <th>Applied On</th>
+                            <th>Action Button</th>
+                            <th>Prove</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>John Doe</td>
-                            <td>Annual Leave</td>
-                            <td><span class="badge bg-success">Approved</span></td>
-                            <td>2024-01-20</td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Jane Smith</td>
-                            <td>Sick Leave</td>
-                            <td><span class="badge bg-warning text-dark">Pending</span></td>
-                            <td>2024-01-22</td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>Michael Brown</td>
-                            <td>Parental Leave</td>
-                            <td><span class="badge bg-danger">Rejected</span></td>
-                            <td>2024-01-25</td>
-                        </tr>
+                        @foreach (var leave in Model)
+                        {
+                            <tr class="text-center">
+                                <td>@leave.LeaveType</td>
+                                <td>@leave.Employee.FullName</td>
+                                <td>@leave.StartDate.ToUniversalTime().AddHours(6).ToString("dd/MM/yyyy")</td>
+                                <td>@leave.EndDate.ToUniversalTime().AddHours(6).ToString("dd/MM/yyyy")</td>
+                                <td>
+                                    <!-- See Reason Button -->
+                                    <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#reasonModal-@leave.Id">
+                                        See Reason
+                                    </button>
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="reasonModal-@leave.Id" tabindex="-1" aria-labelledby="reasonModalLabel-@leave.Id" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="reasonModalLabel-@leave.Id">Leave Reason</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    @leave.Reason
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge @(leave.IsApproved ? "bg-success" : "bg-danger")">
+                                        @(leave.IsApproved ? "Approved" : "Rejected")
+                                    </span>
+                                </td>
+                                <td>
+                                    <!-- Action Button -->
+                                    <a href="@Url.Action("ApproveRejectLeave", "Admin", new { id = leave.Id })" class="btn btn-primary btn-sm">
+                                        Approve/Reject
+                                    </a>
+                                </td>
+                                <td>
+                                    <!-- Prove Button -->
+                                    <a href="@Url.Action("ViewProof", "Admin", new { id = leave.Id })" class="btn btn-info btn-sm">
+                                        View Proof
+                                    </a>
+                                </td>
+                            </tr>
+                        }
                     </tbody>
                 </table>
             </div>

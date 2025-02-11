@@ -20,5 +20,7 @@ namespace AbsenceManager.Models
 		public string PhoneNumber { get; set; }
 
 		public string Role { get; set; } = "USER";
+
+		public List<LeaveRequest> LeaveRequests { get; set; } = new();
 	}
 }

@@ -96,24 +96,32 @@ namespace AbsenceManager.Controllers
 
 
 		[HttpGet]
-		public IActionResult GetDocument(int id)
+		public IActionResult ViewProof(int id)
 		{
-			var leaveRequest = _applicationDbContext.LeaveRequests.Find(id);
+			// Fetch the leave request by its ID
+			var leaveRequest = _applicationDbContext.LeaveRequests
+				.FirstOrDefault(lr => lr.Id == id);
+
 			if (leaveRequest == null || string.IsNullOrEmpty(leaveRequest.DocumentPath))
 			{
-				return NotFound("Document not found");
+				return NotFound("Proof document not found.");
 			}
 
+			// Return the document as a file (it could be an image, PDF, etc.)
 			byte[] fileBytes = Convert.FromBase64String(leaveRequest.DocumentPath);
-			string fileType = "application/octet-stream"; // Default
+			string fileType = "application/octet-stream"; // Default type
 
-			
-			if (leaveRequest.DocumentPath.StartsWith("/9j/")) fileType = "image/jpeg";
-			else if (leaveRequest.DocumentPath.StartsWith("iVBOR")) fileType = "image/png";
-			else if (leaveRequest.DocumentPath.StartsWith("JVBER")) fileType = "application/pdf";
+			if (leaveRequest.DocumentPath.StartsWith("/9j/"))
+				fileType = "image/jpeg";  // If it's a JPEG image
+			else if (leaveRequest.DocumentPath.StartsWith("iVBOR"))
+				fileType = "image/png";   // If it's a PNG image
+			else if (leaveRequest.DocumentPath.StartsWith("JVBER"))
+				fileType = "application/pdf"; // If it's a PDF
 
 			return File(fileBytes, fileType);
 		}
+
+
 
 
 		public IActionResult Dashboard()
@@ -124,7 +132,15 @@ namespace AbsenceManager.Controllers
 			{
 				return RedirectToAction("Login", "Home");
 			}
-			return View();
+
+			// Retrieve all leave requests from the database
+			var leaveRequests = _applicationDbContext.LeaveRequests
+				.Include(lr => lr.Employee)  // Include the Employee details
+				.OrderByDescending(lr => lr.StartDate) // Optional, to sort by start date
+				.ToList();
+
+			// Pass the leave requests to the view
+			return View(leaveRequests);
 		}
 
 		public IActionResult Add()
@@ -174,35 +190,49 @@ namespace AbsenceManager.Controllers
 			
 		}
 
-        public IActionResult Profile()
-        {
-            // Retrieve employee details from Session or database
-            var employeeId = HttpContext.Session.GetInt32("EmployeeId");
-            var employeeFullName = HttpContext.Session.GetString("EmployeeFullName");
-            var employeeDepartment = HttpContext.Session.GetString("EmployeeDepartment");
-            var employeePhoneNumber = HttpContext.Session.GetString("EmployeePhoneNumber");
-            var employeeRole = HttpContext.Session.GetString("EmployeeRole");
+		public IActionResult Profile()
+		{
+			// Retrieve employee details from Session or database
+			var employeeId = HttpContext.Session.GetInt32("EmployeeId");
+			var employeeFullName = HttpContext.Session.GetString("EmployeeFullName");
+			var employeeDepartment = HttpContext.Session.GetString("EmployeeDepartment");
+			var employeePhoneNumber = HttpContext.Session.GetString("EmployeePhoneNumber");
+			var employeeRole = HttpContext.Session.GetString("EmployeeRole");
 
-            if (!employeeId.HasValue || string.IsNullOrEmpty(employeeFullName))
-            {
-                return RedirectToAction("Index");
-            }
+			if (!employeeId.HasValue || string.IsNullOrEmpty(employeeFullName))
+			{
+				return RedirectToAction("Index");
+			}
 
-            // Create Employee model
-            var employeeProfile = new Employee
-            {
-                Id = employeeId.Value,
-                FullName = employeeFullName,
-                Department = employeeDepartment,
-                PhoneNumber = employeePhoneNumber,
-                Role = employeeRole
-            };
+			// Create Employee model
+			var employeeProfile = new Employee
+			{
+				Id = employeeId.Value,
+				FullName = employeeFullName,
+				Department = employeeDepartment,
+				PhoneNumber = employeePhoneNumber,
+				Role = employeeRole
+			};
 
-            return View(employeeProfile);
-        }
+			// Fetch Leave Request History for the employee
+			var leaveRequests = _applicationDbContext.LeaveRequests
+				.Where(lr => lr.EmployeeId == employeeId.Value)
+				.OrderByDescending(lr => lr.StartDate)
+				.ToList();
+
+			// Pass both employeeProfile and leaveRequests to the view
+			var model = new EmployeeProfileViewModel
+			{
+				Employee = employeeProfile,
+				LeaveRequests = leaveRequests
+			};
+
+			return View(model);
+		}
 
 
-        public IActionResult Logout()
+
+		public IActionResult Logout()
         {
             HttpContext.Session.Clear();
 
